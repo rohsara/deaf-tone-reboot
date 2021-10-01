@@ -13,6 +13,16 @@ For Deaf Tone Reboot,
 
 # Demo
 
+
+https://user-images.githubusercontent.com/70675423/135687373-00125170-e487-45a0-9fdd-4ddc80213a36.mp4
+
+
+
 # Training
+
+
+
+https://user-images.githubusercontent.com/70675423/135687388-5177b0e0-729d-4874-a1ee-5f6dd27edfd8.mp4
+
 
 
