@@ -1,5 +1,5 @@
 let model, video, keypoints, predictions=[]; 
-let fft, osc;
+let fft, osc, label;
 // Create a KNN classifier
 const classifier = knnClassifier.create();
 
@@ -24,7 +24,7 @@ function preload() {
 }
 
 function setup() {
-	const canvas = createCanvas(600, 400);
+	const canvas = createCanvas(480, 360);
 	canvas.parent('canvasContainer');
 	
 	osc = new p5.Oscillator('sine');
@@ -44,13 +44,56 @@ async function loadHandTrackingModel() {
 function draw() {
 	background(255);
 	if (model) image(video, 0, 0);
+	filter(GRAY);
 	if (predictions.length > 0) {
-	  // We can call both functions to draw all keypoints and the skeletons
-	  drawKeypoints();
-	  drawSkeleton();
+		// We can call both functions to draw all keypoints and the skeletons
+		drawKeypoints();
+		drawSkeleton();
+
+		let waveform = fft.waveform();
+
+		noFill();
+		beginShape();
+		stroke(20);
+		for (let i = 0; i < waveform.length; i++){
+			let x = map(i, 0, waveform.length, 0, width);
+			let y = map(waveform[i], -1, 1, 0, height);
+			vertex(x,y);
+		}
+		endShape();
+
+		const waveHeight = label ? LABELS_MAP[label][0] : 0;
+  
+		//VCR colors
+		waveVisual(255,255,255, 40, waveHeight); 
+		waveVisual(249, 251, 0, 70, waveHeight); // yellow
+		waveVisual(6, 253, 255, 50, waveHeight); // cyon
+		waveVisual(12, 254, 0, 50, waveHeight); // green
+		waveVisual(253, 4, 251, 50, waveHeight); // magenta
+		waveVisual(251, 2, 4, 100, waveHeight); // red
+		waveVisual(21, 2, 252, 150, waveHeight); // blue
 	}
-	
 }
+
+function waveVisual(r, b, g, a, waveHeight) {
+	var waveform = fft.waveform();
+  
+	noFill();
+	beginShape();
+	stroke(r, b, g, a);
+	strokeWeight(1);
+	
+	const range = 200 / waveHeight;
+  
+	for (var i = 0; i < waveform.length; i++) {
+	  var x = map(i, 0, waveform.length, 0, width);
+	  var y = map(waveform[i], -range, range, 0, height);
+	  vertex(x, y);
+	  vertex(x + 2, y + 2);
+	  // vertex(center1, center2);
+	}
+	endShape();
+  }
 
 async function predictHand() {
 	// Pass in a video stream (or an image, canvas, or 3D tensor) to obtain a
@@ -88,7 +131,8 @@ async function classify() {
 		if (results.confidences) {
 			const confidences = results.confidences;
 			// Change the freq of osc
-			const freq = LABELS_MAP[results.label][0];
+			label = results.label;
+			const freq = LABELS_MAP[label][0];
 			osc.freq(freq);
 			// result.label is the label that has the highest confidence
 			if (results.label) {

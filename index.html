@@ -7,6 +7,7 @@
 		<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-core"></script>
 		<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-converter"></script>
 		<script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/handpose"></script>
+		
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.10.2/p5.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.9.0/addons/p5.dom.min.js"></script>
 		<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
@@ -15,9 +16,32 @@
 
 		<script src="sketch.js"></script>
 		<style>
+			#container {
+				display: flex;
+				/* flex-grow: 1; */
+				justify-content: space-evenly;
+				align-items: flex-end;
+			}
+			#training {
+				display: flex;
+				justify-content: space-evenly;
+				/* gap: 20px; */
+				border-style: outset;
+			}
+			#status {
+				color: red;
+			}
+			#mainBtn {
+				display: flex;
+				justify-content: center;
+				gap: 20px;
+			}
+			h2 {
+				text-align: center;
+			}
 			body {
-				margin: 0;
-				padding: 0;
+				margin: 3;
+				padding: 2;
 			}
 			canvas {
 				margin: auto;
@@ -25,52 +49,65 @@
 		</style>
 	</head>
 	<body>
-		<h2>KNN Classification on Webcam Images with Hand pose model. Built with p5.js</h2>
-		<div id="canvasContainer"></div>
-		<p id="status">Loading Model...</p>
-		<p>
-		  KNN Classifier with mobileNet model labeled this
-		  as Class: <span id="result">...</span>
-		  with a confidence of <span id="confidence">...</span>
-		</p>
-		<p>
-			Do <button id="addClassDo">Add an Example to Class Do</button>
-			<button id="resetDo">Reset Class Do</button>
-			<p><span id="exampleDo">0</span> Do examples | Confidence in Do is : <span id="confidenceDo">0</span></p>
-			
-			Re <button id="addClassRe">Add an Example to Class Re</button>
-			<button id="resetRe">Reset Class Re</button>
-			<p><span id="exampleRe">0</span> Re examples | Confidence in Re is : <span id="confidenceRe">0</span></p>
-			
-			Mi <button id="addClassMi">Add an Example to Class Mi</button>
-			<button id="resetMi">Reset Class Mi</button>
-			<p><span id="exampleMi">0</span> Mi examples | Confidence in Mi is : <span id="confidenceMi">0</span></p>
-			
-			Fa <button id="addClassFa">Add an Example to Class Fa</button>
-			<button id="resetFa">Reset Class Fa</button>
-			<p><span id="exampleFa">0</span> Fa examples | Confidence in Fa is : <span id="confidenceFa">0</span></p>
-			
-			Sol <button id="addClassSol">Add an Example to Class Sol</button>
-			<button id="resetSol">Reset Class Sol</button>
-			<p><span id="exampleSol">0</span> Sol examples | Confidence in Sol is : <span id="confidenceSol">0</span></p>
-			
-			La <button id="addClassLa">Add an Example to Class La</button>
-			<button id="resetLa">Reset Class La</button>
-			<p><span id="exampleLa">0</span> La examples | Confidence in La is : <span id="confidenceLa">0</span></p>
-			
-			Ti <button id="addClassTi">Add an Example to Class Ti</button>
-			<button id="resetTi">Reset Class Ti</button>
-			<p><span id="exampleTi">0</span> Ti examples | Confidence in Ti is : <span id="confidenceTi">0</span></p>
-			
-			Do5 <button id="addClassDo5">Add an Example to Class Do5</button>
-			<button id="resetDo5">Reset Class Do5</button>
-			<p><span id="exampleDo5">0</span> Do5 examples | Confidence in Do5 is : <span id="confidenceDo5">0</span></p>
+		<h2>Solfege hand sign player</h2>
+		<div id="container">
+			<div id="canvasContainer"></div>
+			<div id="instructions">
+				<img src="assets/solfege.png" height="200px">
+				<p id="status">Loading Model...</p>
+				<p>
+				  KNN Classifier with mobileNet model labeled this
+				  as Class: <span id="result">...</span>
+				  with a confidence of <span id="confidence">...</span>
+				</p>
+			</div>
+		</div>
 
-			<br />
-			<p>
-				<button id="buttonPredict">Start predicting!</button><br />
-				<button id="clearAll">Clear all classes</button><br />
-			</p>
+		<div id="training">
+			<div id="col1">
+				<p>
+					<strong> Do </strong> <button id="addClassDo">Add an Example to Class Do</button>
+					<button id="resetDo">Reset Class Do</button>
+					<p><span id="exampleDo">0</span> Do examples | Confidence in Do is : <span id="confidenceDo">0</span></p>
+					
+					<strong> Re </strong> <button id="addClassRe">Add an Example to Class Re</button>
+					<button id="resetRe">Reset Class Re</button>
+					<p><span id="exampleRe">0</span> Re examples | Confidence in Re is : <span id="confidenceRe">0</span></p>
+					
+					<strong> Mi </strong> <button id="addClassMi">Add an Example to Class Mi</button>
+					<button id="resetMi">Reset Class Mi</button>
+					<p><span id="exampleMi">0</span> Mi examples | Confidence in Mi is : <span id="confidenceMi">0</span></p>
+					
+					<strong> Fa </strong> <button id="addClassFa">Add an Example to Class Fa</button>
+					<button id="resetFa">Reset Class Fa</button>
+					<p><span id="exampleFa">0</span> Fa examples | Confidence in Fa is : <span id="confidenceFa">0</span></p>
+				</p>
+			</div>
+			<div id="col2">
+				<p>
+					<strong> Sol </strong> <button id="addClassSol">Add an Example to Class Sol</button>
+					<button id="resetSol">Reset Class Sol</button>
+					<p><span id="exampleSol">0</span> Sol examples | Confidence in Sol is : <span id="confidenceSol">0</span></p>
+					
+					<strong> La </strong> <button id="addClassLa">Add an Example to Class La</button>
+					<button id="resetLa">Reset Class La</button>
+					<p><span id="exampleLa">0</span> La examples | Confidence in La is : <span id="confidenceLa">0</span></p>
+					
+					<strong> Ti </strong> <button id="addClassTi">Add an Example to Class Ti</button>
+					<button id="resetTi">Reset Class Ti</button>
+					<p><span id="exampleTi">0</span> Ti examples | Confidence in Ti is : <span id="confidenceTi">0</span></p>
+					
+					<strong> Do5 </strong> <button id="addClassDo5">Add an Example to Class Do5</button>
+					<button id="resetDo5">Reset Class Do5</button>
+					<p><span id="exampleDo5">0</span> Do5 examples | Confidence in Do5 is : <span id="confidenceDo5">0</span></p>
+				</p>
+			</div>
+			
+		</div>
+		
+		<p id="mainBtn">
+			<button id="buttonPredict">Start predicting!</button>
+			<button id="clearAll">Clear all classes</button><br />
 		</p>
 	</body>
 </html>
