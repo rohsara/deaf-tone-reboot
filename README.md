@@ -9,7 +9,7 @@ For Deaf Tone Reboot,
 - the player can also train the model themselves for better accuracy. 
 - using Solfege hand signs for training instead of ASL alphabets (C, D, E, F, G, A, B, C)
 
-👉 PLAY : https://rohsara.github.io/deaf-tone/
+👉 PLAY : https://rohsara.github.io/deaf-tone-reboot/
 
 # Demo
 
